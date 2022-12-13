@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying all pages.
+ * Template Name: Page Black  
  *
  * This is the template that displays all pages by default.
  * Please note that this is the WordPress construct of pages and that other
@@ -9,7 +9,7 @@
  * @package OceanWP WordPress theme
  */
 
-get_header(); ?>
+get_header('black'); ?>
 
 	<?php do_action( 'ocean_before_content_wrap' ); ?>
 

@@ -1,0 +1,21 @@
+.black_css .single-post .entry-title,
+h1, h2, h3, h4, h5, h6, .theme-heading, .widget-title, .oceanwp-widget-recent-posts-title, .comment-reply-title, .entry-title, .sidebar-box .widget-title{
+	color:#f48731
+}
+.black_css .single-post a {
+    color: #f48731;
+}
+.black_css .single-post a:hover {
+    color: #363636;
+}
+.black_css .single-post input[type="submit"],
+.black_css  .single-post .elementor-widget-contact-form-7 .wpcf7 input.wpcf7-submit{
+	background-color: #f48731 !important;
+}
+.black_css .single-post input[type="submit"]:hover,
+.black_css  .single-post .elementor-widget-contact-form-7 .wpcf7 input.wpcf7-submit:hover{
+	background-color: #000 !important;
+}
+.black_css .single-post span.breadcrumb_last{
+    color: #fff !important;
+} 

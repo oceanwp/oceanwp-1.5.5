@@ -32,6 +32,23 @@ get_header(); ?>
 				// Check if posts exist
 				if ( have_posts() ) : ?>
 
+                    <div data-id="1e274952" style="padding-top: 25px; text-align: center; " class="elementor-element elementor-element-1e274952 elementor-widget elementor-widget-heading" data-element_type="heading.default">
+                        <div class="elementor-widget-container">
+                            <h1 class="elementor-heading-title elementor-size-xl"> <?php single_term_title(); ?> </h1>
+
+                        </div>
+                    </div>
+                    <div style="text-align: center; " data-id="1a1d552" class="elementor-element elementor-element-1a1d552 elementor-widget elementor-widget-heading" data-element_type="heading.default">
+                        <div class="elementor-widget-container">
+                            <h4 class="elementor-heading-title elementor-size-medium">
+                                <?php echo category_description(); ?>
+                            </h4>
+
+                        </div>
+                    </div>
+						
+			<div style="margin: 20px 39%;clear: both;margin-bottom: 30px !important;" data-id="1f7d475" class="elementor-element elementor-element-1f7d475 elementor-search-form--skin-classic elementor-search-form--button-type-icon elementor-search-form--icon-search elementor-widget elementor-widget-search-form" data-settings="{&quot;skin&quot;:&quot;classic&quot;}" data-element_type="search-form.default"><div class="elementor-widget-container"><form class="elementor-search-form" role="search" action="https://forachange.co.il" method="get"><div class="elementor-search-form__container" style="border-radius: 4px;min-height: 40px;"> <input style="padding-right: 15px;" placeholder="חיפוש נושא" class="elementor-search-form__input" type="search" name="s" title="חיפוש" value="" data-fontsize="15"> <button style="min-width: 29px;" class="elementor-search-form__submit" type="submit" data-fontsize="16"> <i class="fa fa-search" aria-hidden="true"></i> </button></div></form></div></div>
+
 					<div id="blog-entries" class="<?php oceanwp_blog_wrap_classes(); ?>">
 
 						<?php

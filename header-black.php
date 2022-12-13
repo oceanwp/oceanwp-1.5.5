@@ -6,7 +6,7 @@
  */ ?>
 
 <!DOCTYPE html>
-<html <?php language_attributes(); ?><?php oceanwp_schema_markup( 'html' ); ?>>
+<html class="black_css" <?php language_attributes(); ?><?php oceanwp_schema_markup( 'html' ); ?>>
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<link rel="profile" href="http://gmpg.org/xfn/11">
@@ -14,9 +14,11 @@
     <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 
+	
+	
     <?php wp_head(); ?>
 	
-	
+	<link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/black-style.css">	
 	<!-- Facebook Pixel Code -->
 <script>
   !function(f,b,e,v,n,t,s)
@@ -44,7 +46,7 @@
         $front_menu = (is_front_page()) ? 'el-front' : '';
         $inverse = (!is_front_page()) ? 'el-inverse' : '';
     ?>
-    <div id="el-main-menu" class="<?=$inverse . ' ' . $front_menu;?>">
+    <div id="el-main-menu" class="<?=$front_menu;?> black">
         <div class="el-box">
             <div class="el-toogle-menu">
                 <div class="hamburger" id="hamburger-11">
@@ -55,8 +57,8 @@
             </div>
             <div class="el-logotype">
                 <a href="<?php echo get_home_url('/')?>">
-                    <img src="<?php echo get_field('logo_main_header_inverse', 'option')['url']?>" alt="<?php echo get_field('logo_main_header', 'option')['alt']?>">
-                    <img src="<?php echo get_field('logo_main_header', 'option')['url']?>" alt="<?php echo get_field('logo_main_header', 'option')['alt']?>">
+                    <img src="<?php echo get_field('logo_main_header_orange', 'option')['url']?>" alt="<?php echo get_field('logo_main_header_orange', 'option')['alt']?>">
+                    <img src="<?php echo get_field('logo_main_header_orange', 'option')['url']?>" alt="<?php echo get_field('logo_main_header_orange', 'option')['alt']?>">
                 </a>
             </div>
             <div class="el-navigation">

@@ -257,7 +257,9 @@ class OCEANWP_Theme_Class {
 			'topbar_menu'     => esc_html__( 'Top Bar', 'oceanwp' ),
 			'main_menu'       => esc_html__( 'Main', 'oceanwp' ),
 			'footer_menu'     => esc_html__( 'Footer', 'oceanwp' ),
-			'mobile_menu'     => esc_html__( 'Mobile (optional)', 'oceanwp' )
+			'mobile_menu'     => esc_html__( 'Mobile (optional)', 'oceanwp' ),
+            'footer_menu_1'     =>  'Menu column footer 1',
+            'footer_menu_2'     =>  'Menu column footer 2',
 		) );
 
 		// Adding Gutenberg support
@@ -923,3 +925,265 @@ class OCEANWP_Theme_Class {
 
 }
 $oceanwp_theme_class = new OCEANWP_Theme_Class;
+class CSS_Menu_Walker extends Walker {
+	var $db_fields = array('parent' => 'menu_item_parent', 'id' => 'db_id');
+	
+	function start_lvl(&$output, $depth = 0, $args = array()) {
+		$indent = str_repeat("", $depth);
+		$output .= "$indent<ul>";
+	}
+	
+	function end_lvl(&$output, $depth = 0, $args = array()) {
+		$indent = str_repeat("", $depth);
+		$output .= "$indent</ul>";
+	}
+	
+	function start_el(&$output, $item, $depth = 0, $args = array(), $id = 0) {
+	
+		global $wp_query;
+		$indent = ($depth) ? str_repeat("", $depth) : '';
+		$class_names = $value = '';
+		$classes = empty($item->classes) ? array() : (array) $item->classes;
+		
+		/* Добавление активного класса */
+		if (in_array('current-menu-item', $classes)) {
+			$classes[] = 'active';
+			unset($classes['current-menu-item']);
+		}
+		
+		/* Проверка наличия дочерних элементов */
+		$children = get_posts(array('post_type' => 'nav_menu_item', 'nopaging' => true, 'numberposts' => 1, 'meta_key' => '_menu_item_menu_item_parent', 'meta_value' => $item->ID));
+		if (!empty($children)) {
+			$classes[] = 'has-sub';
+		}
+		
+		$class_names = join(' ', apply_filters('nav_menu_css_class', array_filter($classes), $item, $args));
+		$class_names = $class_names ? ' class="' . esc_attr($class_names) . '"' : '';
+		
+		$id = apply_filters('nav_menu_item_id', 'menu-item-'. $item->ID, $item, $args);
+		$id = $id ? ' id="' . esc_attr($id) . '"' : '';
+		
+		$output .= $indent . '<li' . $id . $value . $class_names .'>';
+		
+		$attributes  = ! empty($item->attr_title) ? ' title="'  . esc_attr($item->attr_title) .'"' : '';
+		$attributes .= ! empty($item->target)     ? ' target="' . esc_attr($item->target    ) .'"' : '';
+		$attributes .= ! empty($item->xfn)        ? ' rel="'    . esc_attr($item->xfn       ) .'"' : '';
+		$attributes .= ! empty($item->url)        ? ' href="'   . esc_attr($item->url       ) .'"' : '';
+		
+		$item_output = $args->before;
+		$item_output .= '<a'. $attributes .'><span>';
+		$item_output .= $args->link_before . apply_filters('the_title', $item->title, $item->ID) . $args->link_after;
+		$item_output .= '</span></a>';
+		$item_output .= $args->after;
+		
+		$output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);
+	}
+	
+	function end_el(&$output, $item, $depth = 0, $args = array()) {
+		$output .= "</li>";
+	}
+};
+
+if( function_exists('acf_add_options_page') ) { 
+  acf_add_options_page(array(
+        'page_title'    => 'Theme settings',
+        'menu_title'    => 'Theme settings',
+        'menu_slug'     => 'theme-general-settings',
+        'capability'    => 'edit_posts',
+        'redirect'      => false
+    ));
+  
+  acf_add_options_sub_page(array(
+    'page_title'  => 'Header settings',
+    'menu_title'  => 'Header settings',
+    'menu_slug'   => 'header-settings',
+    'parent_slug' => 'theme-general-settings',
+  ));
+
+  acf_add_options_sub_page(array(
+    'page_title'  => 'Footer settings',
+    'menu_title'  => 'Footer settings',
+    'menu_slug'   => 'Footer-settings',
+    'parent_slug' => 'theme-general-settings',
+  ));
+
+  acf_add_options_sub_page(array(
+    'page_title'  => 'Form settings',
+    'menu_title'  => 'Form settings',
+    'menu_slug'   => 'Form-settings',
+    'parent_slug' => 'theme-general-settings',
+  ));
+}
+
+
+// elins dev Script
+add_action( 'wp_enqueue_scripts', 'theme_elins_scripts' );
+function theme_elins_scripts() {
+    //   custom js | css
+    wp_enqueue_style( 'almoni-fonts', get_template_directory_uri(). '/fonts/css/almoni-dl-aaa.min.css');
+    wp_enqueue_style( 'elins-style', get_template_directory_uri(). '/assets/css/elins.css');
+    wp_enqueue_script( 'sticky-script', get_template_directory_uri() . '/assets/js/jquery.sticky.js', array('jquery'), '1.0.0', true );
+    wp_enqueue_script( 'elins-script', get_template_directory_uri() . '/assets/js/elins.js', array('jquery'), '1.0.0', true );
+}
+
+
+// Register Custom Post Type - Offers
+function testemonials() {
+
+    $labels = array(
+        'name'                  => 'Testemonials',
+        'singular_name'         => 'Testemonials',
+        'menu_name'             => 'Testemonials',
+        'name_admin_bar'        => 'Testemonials',
+        'archives'              => 'Testemonials',
+        'attributes'            => 'Testemonials Attributes',
+        'parent_item_colon'     => 'Parent Testemonial:',
+        'all_items'             => 'All Testemonials',
+        'add_new_item'          => 'Add New Testemonial',
+        'add_new'               => 'Add Testemonial',
+        'new_item'              => 'New Testemonial',
+        'edit_item'             => 'Edit Testemonial',
+        'update_item'           => 'Update Testemonial',
+        'view_item'             => 'View Testemonial',
+        'view_items'            => 'View Testemonials',
+        'search_items'          => 'Search Testemonial',
+        'not_found'             => 'Not found',
+        'not_found_in_trash'    => 'Not found in Trash',
+        'featured_image'        => 'Testemonial photo',
+        'set_featured_image'    => 'Set testemonials photo',
+        'remove_featured_image' => 'Remove testemonial image',
+        'use_featured_image'    => 'Use as testemonial image',
+        'insert_into_item'      => 'Insert into testemonial',
+        'uploaded_to_this_item' => 'Uploaded to this Testemonials',
+        'items_list'            => 'Testemonial list',
+        'items_list_navigation' => 'Items list navigation',
+        'filter_items_list'     => 'Filter Testemonial list',
+    );
+    $args = array(
+        'label'                 => 'testemonials',
+        'description'           => 'testemonials  post type',
+        'labels'                => $labels,
+        'supports'              => array('excerpt', 'title', 'editor', 'thumbnail', 'comments', 'page-attributes' ),
+        //'taxonomies'            => array( 'offers' ),
+        'hierarchical'          => true,
+        'public'                => true,
+        'show_ui'               => true,
+        'show_in_menu'          => true,
+        'menu_position'         => 5,
+        'show_in_admin_bar'     => true,
+        'show_in_nav_menus'     => true,
+        'can_export'            => true,
+        'has_archive'           => 'testemonials',
+        'exclude_from_search'   => false,
+        'publicly_queryable'    => true,
+        'capability_type'       => 'page',
+    );
+    register_post_type( 'testemonials', $args );
+
+}
+add_action( 'init', 'testemonials', 0 );
+
+// Register Custom Taxonomy - offers
+function offers_taxonomy() {
+
+    $labels = array(
+        'name'                       => 'Offers',
+        'singular_name'              => 'Offer',
+        'menu_name'                  => 'Offer category',
+        'all_items'                  => 'All offers',
+        'parent_item'                => 'Parent offer',
+        'parent_item_colon'          => 'Parent offer:',
+        'new_item_name'              => 'New offer Name',
+        'add_new_item'               => 'Add offer Item',
+        'edit_item'                  => 'Edit offer',
+        'update_item'                => 'Update offer',
+        'view_item'                  => 'View offer',
+        'separate_items_with_commas' => 'Separate items with commas',
+        'add_or_remove_items'        => 'Add or remove offers',
+        'choose_from_most_used'      => 'Choose from the most used',
+        'popular_items'              => 'Popular offers',
+        'search_items'               => 'Search offers category',
+        'not_found'                  => 'Not Found',
+        'no_terms'                   => 'No offers',
+        'items_list'                 => 'Offers list',
+        'items_list_navigation'      => 'Items list navigation',
+    );
+    $args = array(
+        'labels'                     => $labels,
+        'hierarchical'               => true,
+        'public'                     => true,
+        'show_ui'                    => true,
+        'show_admin_column'          => true,
+        'show_in_nav_menus'          => true,
+        'show_tagcloud'              => true,
+    );
+    register_taxonomy( 'offers', array( 'offer' ), $args );
+
+}
+//add_action( 'init', 'offers_taxonomy', 0 );
+function the_breadcrumb() {
+    $sep = ' <i class="fas fa-angle-left"></i> ';
+    if (!is_front_page()) {
+
+        // Start the breadcrumb with a link to your homepage
+        echo '<div class="breadcrumbs">';
+        echo '<a href="';
+        echo get_option('home');
+        echo '">';
+        echo 'בית';
+        echo '</a>' . $sep;
+
+
+         if ( is_page_template( 'page-template-1.php' )) {
+            echo '<a href="';
+	        echo get_permalink(4090); 
+	        echo '">';
+	        echo get_the_title(4090);
+	        echo '</a>' . $sep;
+        }
+
+        // Check if the current page is a category, an archive or a single page. If so show the category or archive name.
+        if (is_category() || is_single() ){
+            the_category('title_li=');
+        } elseif (is_archive() || is_single()){
+            if ( is_day() ) {
+                printf( __( '%s', 'text_domain' ), get_the_date() );
+            } elseif ( is_month() ) {
+                printf( __( '%s', 'text_domain' ), get_the_date( _x( 'F Y', 'monthly archives date format', 'text_domain' ) ) );
+            } elseif ( is_year() ) {
+                printf( __( '%s', 'text_domain' ), get_the_date( _x( 'Y', 'yearly archives date format', 'text_domain' ) ) );
+            } else {
+                _e( 'Blog Archives', 'text_domain' );
+            }
+        }
+
+        // If the current page is a single post, show its title with the separator
+        if (is_single()) {
+            echo $sep;
+            the_title();
+        }
+
+
+        // If the current page is a static page, show its title.
+        if (is_page()) {
+            echo the_title();
+        }
+
+       
+
+       
+
+        // if you have a static page assigned to be you posts list page. It will find the title of the static page and display it. i.e Home >> Blog
+        if (is_home()){
+            global $post;
+            $page_for_posts_id = get_option('page_for_posts');
+            if ( $page_for_posts_id ) {
+                $post = get_page($page_for_posts_id);
+                setup_postdata($post);
+                the_title();
+                rewind_posts();
+            }
+        }
+        echo '</div>';
+    }
+}

@@ -15,8 +15,6 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 
     <?php wp_head(); ?>
-	
-	
 	<!-- Facebook Pixel Code -->
 <script>
   !function(f,b,e,v,n,t,s)
@@ -38,13 +36,13 @@
 
 <body <?php body_class(); ?>>
 
-    <?php get_template_part('templates/components/mobile', 'menu')?>
+    <?php get_template_part('templates/components/mobile', 'menu-red')?>
 <div class="el-wrapper">
     <?php
         $front_menu = (is_front_page()) ? 'el-front' : '';
         $inverse = (!is_front_page()) ? 'el-inverse' : '';
     ?>
-    <div id="el-main-menu" class="<?=$inverse . ' ' . $front_menu;?>">
+    <div id="el-main-menu" class="<?=$front_menu;?> black red">
         <div class="el-box">
             <div class="el-toogle-menu">
                 <div class="hamburger" id="hamburger-11">
@@ -55,8 +53,8 @@
             </div>
             <div class="el-logotype">
                 <a href="<?php echo get_home_url('/')?>">
-                    <img src="<?php echo get_field('logo_main_header_inverse', 'option')['url']?>" alt="<?php echo get_field('logo_main_header', 'option')['alt']?>">
-                    <img src="<?php echo get_field('logo_main_header', 'option')['url']?>" alt="<?php echo get_field('logo_main_header', 'option')['alt']?>">
+                    <img src="<?php echo get_field('logo_main_header_red', 'option')['url']?>" alt="<?php echo get_field('logo_main_header_red', 'option')['alt']?>">
+                    <img src="<?php echo get_field('logo_main_header_red', 'option')['url']?>" alt="<?php echo get_field('logo_main_header_red', 'option')['alt']?>">
                 </a>
             </div>
             <div class="el-navigation">
